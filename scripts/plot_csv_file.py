@@ -29,6 +29,7 @@ if __name__ == '__main__':
     parser.add_argument('--x_label', nargs=1, help='String to display in the x axis')
     parser.add_argument('--y_label', nargs=1, help='String to display in the y axis')
     parser.add_argument('--cols', nargs=1, help='Set of cols to represent (examples: 3, 1:4)', default=['3'])
+    parser.add_argument('--y_offset', nargs=1, type=float, help='Adds the offset to the y values');
     args = parser.parse_args(sys.argv[1:])
     
     # Setup matplotlib parameters
@@ -48,6 +49,11 @@ if __name__ == '__main__':
     s[:,0] /= 1e9               # Convert to seconds
     f = Figure(figsize=(5, 4), dpi=100)
     ax1 = f.add_subplot(1,1,1)
+    
+    # Perform the offset if necessary
+    if args.y_offset != None:
+        code = 's[:, ' + args.cols[0] + '] += ' + str(args.y_offset)
+        exec(code)
     
     # Define plot code
     code = 'ax1.plot(s[:,0], s[:, ' + args.cols[0] + '], LineWidth=3)'
