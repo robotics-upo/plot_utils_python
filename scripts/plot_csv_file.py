@@ -29,7 +29,8 @@ if __name__ == '__main__':
     parser.add_argument('--x_label', nargs=1, help='String to display in the x axis')
     parser.add_argument('--y_label', nargs=1, help='String to display in the y axis')
     parser.add_argument('--cols', nargs=1, help='Set of cols to represent (examples: 3, 1:4)', default=['3'])
-    parser.add_argument('--y_offset', nargs=1, type=float, help='Adds the offset to the y values');
+    parser.add_argument('--y_offset', nargs=1, type=float, default=0, help='Adds the offset to the y values');
+    parser.add_argument('--scale', nargs=1, type=float, default=1);
     args = parser.parse_args(sys.argv[1:])
     
     # Setup matplotlib parameters
@@ -50,10 +51,13 @@ if __name__ == '__main__':
     f = Figure(figsize=(5, 4), dpi=100)
     ax1 = f.add_subplot(1,1,1)
     
-    # Perform the offset if necessary
-    if args.y_offset != None:
-        code = 's[:, ' + args.cols[0] + '] += ' + str(args.y_offset)
-        exec(code)
+    # Perform the offset and scaling of the data if necessary
+    code = 's[:, ' + args.cols[0] + '] += ' + str(args.y_offset)
+    exec(code)
+    code = 's[:, ' + args.cols[0] + '] *= ' + str(args.scale)    
+    exec(code)
+    
+    
     
     # Define plot code
     code = 'ax1.plot(s[:,0], s[:, ' + args.cols[0] + '], LineWidth=3)'
